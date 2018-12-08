@@ -57,6 +57,7 @@ public class BasicOpMode_Iterative extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
+    private DcMotor linearActuator = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -70,6 +71,8 @@ public class BasicOpMode_Iterative extends OpMode
         // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        linearActuator = hardwareMap.get(DcMotor.class, "linear_actuator");
+
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -111,6 +114,7 @@ public class BasicOpMode_Iterative extends OpMode
         // - This uses basic math to combine motions and is easier to drive straight.
         double drive = -gamepad1.left_stick_y;
         double turn  =  gamepad1.right_stick_x;
+        double lin = -gamepad2.right_stick_y;
         leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
         rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
@@ -120,8 +124,10 @@ public class BasicOpMode_Iterative extends OpMode
         // rightPower = -gamepad1.right_stick_y ;
 
         // Send calculated power to wheels
-        leftDrive.setPower(leftPower/4);
-        rightDrive.setPower(rightPower/4);
+        leftDrive.setPower(leftPower);
+        rightDrive.setPower(rightPower);
+        linearActuator.setPower(lin);
+
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
