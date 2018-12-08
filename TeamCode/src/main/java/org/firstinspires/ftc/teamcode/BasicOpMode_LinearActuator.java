@@ -72,26 +72,29 @@ public class BasicOpMode_LinearActuator extends LinearOpMode {
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
-
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         waitForStart();
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         //while (opModeIsActive()) {
+        int current_position;
+        current_position = leftDrive.getCurrentPosition();
+        telemetry.addData("encoder_current_position:", current_position);
+
+        leftDrive.setTargetPosition(current_position + 1220);
+        //leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        telemetry.addData("encoder_new_current_position:", leftDrive.getCurrentPosition());
 
         leftDrive.setPower(1);
 
-        sleep(1000);
-
-        leftDrive.setPower(-1);
-
-        //move backward for 1 seconds
-        sleep( 2250);
 
 
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftDrive, rightDrive);
+        //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftDrive);
         telemetry.update();
         //}
     }
