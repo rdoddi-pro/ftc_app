@@ -95,8 +95,6 @@ public class HardwarePushbot
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
     }
  }
 
