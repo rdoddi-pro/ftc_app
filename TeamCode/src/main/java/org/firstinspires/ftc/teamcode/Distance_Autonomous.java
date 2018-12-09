@@ -62,7 +62,7 @@ public class Distance_Autonomous extends LinearOpMode {
     @Override
     public void runOpMode() {
         leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightDrive.setDirection(DcMotorSimple.Direction.REVERSE?);
+        rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         // you can use this as a regular DistanceSensor.
         sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_range");
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
@@ -78,7 +78,7 @@ public class Distance_Autonomous extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()) {
             // generic DistanceSensor methods.
-            while ((sensorRange.getDistance(DistanceUnit.CM) < 5){
+            while (sensorRange.getDistance(DistanceUnit.CM) < 5){
                 leftDrive.setPower(0.5);
                 rightDrive.setPower(0.5);
             }
