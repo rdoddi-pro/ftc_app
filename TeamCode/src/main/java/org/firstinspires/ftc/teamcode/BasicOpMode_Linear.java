@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -55,6 +56,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
+    //private DcMotor leftDrive2 = null;
+    //private DcMotor rightDrive2 = null;
 
     @Override
     public void runOpMode() {
@@ -64,16 +67,16 @@ public class BasicOpMode_Linear extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-
+        leftDrive  = hardwareMap.get(DcMotor.class, "front_left");
+        rightDrive = hardwareMap.get(DcMotor.class, "front_right");
+        //leftDrive2  = hardwareMap.get(DcMotor.class, "front_left");
+       // rightDrive2 = hardwareMap.get(DcMotor.class, "front_right");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
@@ -82,21 +85,24 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
             leftDrive.setPower(0.25);
             rightDrive.setPower(0.25);
-            //move forward and touch gold mineral
+
             sleep(2250);
 
             leftDrive.setPower(-0.25);
             rightDrive.setPower(-0.25);
-            //move backward for 1 seconds
-            sleep( 1250);
 
-            leftDrive.setPower(0.25);
-            rightDrive.setPower(-0.25);
+            //move backward for 1 seconds
+            sleep( 1500);
+
+            leftDrive.setPower(0.5);
+            rightDrive.setPower(-0.5);
+
             //turn left
-            sleep( 2750);
+            sleep( 1500);
 
             leftDrive.setPower(0.25);
             rightDrive.setPower(0.25);
+
             //go forward
             sleep( 2750);
 
@@ -107,21 +113,26 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
             leftDrive.setPower(0.25);
             rightDrive.setPower(0.25);
+
             //go forward
             sleep( 3500);
 
             leftDrive.setPower(0);
             rightDrive.setPower(0);
+
             //stop and drop team marker in depot
             sleep( 2000);
 
             leftDrive.setPower(0.25);
             rightDrive.setPower(-0.25);
+            //leftDrive2.setPower(0.25);
+            //rightDrive2.setPower(-0.25);
             //u-turn from left
-            sleep( 3750);
+            sleep( 3600);
 
             leftDrive.setPower(1);
             rightDrive.setPower(1);
+
             //go forward to park in crater
             sleep( 3500);
 
