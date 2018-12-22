@@ -63,7 +63,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Route2FacingCrater_2Motors", group="Pushbot")
-public class PushbotAutoDriveByEncoder_Linear_Siddh extends LinearOpMode {
+public class PushbotAutoDriveByEncoder_Linear_SP extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
