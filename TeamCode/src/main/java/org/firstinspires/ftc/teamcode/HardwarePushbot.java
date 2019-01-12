@@ -56,8 +56,8 @@ public class HardwarePushbot
     /* Public OpMode members. */
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
-    public DcMotor  leftDrive2  = null;
-    public DcMotor  rightDrive2 = null;
+    //public DcMotor  leftDrive2  = null;
+    //public DcMotor  rightDrive2 = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -76,25 +76,25 @@ public class HardwarePushbot
         // Define and Initialize Motors
         leftDrive  = hwMap.get(DcMotor.class, "back_left");
         rightDrive = hwMap.get(DcMotor.class, "back_right");
-        leftDrive2 = hwMap.get(DcMotor.class, "front_left");
-        rightDrive2 = hwMap.get(DcMotor.class, "front_right");
+        //leftDrive2 = hwMap.get(DcMotor.class, "front_left");
+        //rightDrive2 = hwMap.get(DcMotor.class, "front_right");
         leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        leftDrive2.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        rightDrive2.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        //leftDrive2.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        //rightDrive2.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
 
         // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
-        leftDrive2.setPower(0);
-        rightDrive2.setPower(0);
+        //leftDrive2.setPower(0);
+        //rightDrive2.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //leftDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
  }
 

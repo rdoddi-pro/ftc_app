@@ -144,18 +144,26 @@ public class PushbotAutoEncoder_FacingCraterRt2Working extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  25,25,6.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED, -15, -15, 4.0);
-        encoderDrive(TURN_SPEED, -22, 22, 5.0);
-        encoderDrive(DRIVE_SPEED, 35,35, 7.0);
-        encoderDrive(TURN_SPEED, -22, 22, 5.0 );
-        encoderDrive(DRIVE_SPEED, 15, 15, 5.0);
-        encoderDrive(TURN_SPEED, -10.5, 10.5, 3.0);
-        encoderDrive(DRIVE_SPEED, 35, 35, 6.0);
-        encoderDrive(DRIVE_SPEED*1.25, -80, -80, 10.0);
+        encoderDrive(DRIVE_SPEED,  25,25,6.0);  // go forward and touch gold mineral
+        encoderDrive(DRIVE_SPEED, -15, -15, 4.0);//go backward
+        encoderDrive(TURN_SPEED, -8, 8, 5.0);//turn left
+        encoderDrive(DRIVE_SPEED, 35,35, 7.0);//go forward
+        encoderDrive(TURN_SPEED, -8, 8, 5.0 );//turn left
+        encoderDrive(DRIVE_SPEED, 15, 15, 5.0);//go forward
+        encoderDrive(TURN_SPEED, -2.25, 2.25, 3.0);//turn left a little
+        encoderDrive(DRIVE_SPEED, 35, 35, 6.0);//go forward to the depot and drop team marker
+        encoderDrive(DRIVE_SPEED*1.25, -75, -75, 10.0);//go backward and park in crater
 
-
-
+        //this block is for the previous wheels(without omni)
+        //encoderDrive(DRIVE_SPEED,  25,25,6.0);  // go forward and touch gold mineral
+        //encoderDrive(DRIVE_SPEED, -15, -15, 4.0);//go backward
+        //encoderDrive(TURN_SPEED, -22, 22, 5.0);//turn left
+        //encoderDrive(DRIVE_SPEED, 35,35, 7.0);//go forward
+        //encoderDrive(TURN_SPEED, -22, 22, 5.0 );//turn left
+        //encoderDrive(DRIVE_SPEED, 15, 15, 5.0);//go forward
+        //encoderDrive(TURN_SPEED, -10.5, 10.5, 3.0);//turn left a little
+        //encoderDrive(DRIVE_SPEED, 35, 35, 6.0);//go forward to the depot and drop team marker
+        //encoderDrive(DRIVE_SPEED*1.25, -80, -80, 10.0);//go backward and park in crater
 
 
         telemetry.addData("Path", "Complete");

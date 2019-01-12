@@ -30,13 +30,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -65,8 +61,8 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Route1-FacingDepot", group="Pushbot")
-public class PushbotAutoEncoder_FacingDepotRt1Working extends LinearOpMode {
+@Autonomous(name="AllRoutes", group="Pushbot")
+public class PushbotAutoEncoder_Routes extends LinearOpMode {
     private DcMotor  leftDrive   = null;
     private DcMotor  rightDrive  = null;
     //public DcMotor  leftDrive2  = null;
@@ -85,7 +81,14 @@ public class PushbotAutoEncoder_FacingDepotRt1Working extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        leftDrive  = hardwareMap.get(DcMotor.class, "front_left");
+        routesInit();
+        facingDepot_middle();
+        // Step through each leg of the path,
+        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+    }
+
+    public void routesInit(){
+        leftDrive = hardwareMap.get(DcMotor.class, "front_left");
         rightDrive = hardwareMap.get(DcMotor.class, "front_right");
         //leftDrive2 = hardwareMap.get(DcMotor.class, "back_left");
         //rightDrive2 = hardwareMap.get(DcMotor.class, "back_right");
@@ -123,27 +126,24 @@ public class PushbotAutoEncoder_FacingDepotRt1Working extends LinearOpMode {
         //rightDrive2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
-
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //leftDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //rightDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
-                            leftDrive.getCurrentPosition(),
-                            rightDrive.getCurrentPosition());
-
-
+        telemetry.addData("Path0", "Starting at %7d :%7d",
+                leftDrive.getCurrentPosition(),
+                rightDrive.getCurrentPosition());
 
 
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+    }
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+    public void facingDepot_middle() {
         encoderDrive(DRIVE_SPEED,  45,45,10.0);  // go forward and hit gold mineral while dragging it into the depot and dropping the team marker
         encoderDrive(TURN_SPEED, 12, -12, 5.0);  // back up turning right
         encoderDrive(DRIVE_SPEED,   10, 10, 6.0);  // go forward
@@ -152,22 +152,9 @@ public class PushbotAutoEncoder_FacingDepotRt1Working extends LinearOpMode {
         encoderDrive(TURN_SPEED, 2.25, -2.25,5.0);//small adjustment to the right
         encoderDrive(DRIVE_SPEED*2, 60, 60, 15.0);//go forward and park in crater
 
-        //this block is for the previous wheels(without omni)
-        //encoderDrive(DRIVE_SPEED,  45,45,10.0);  // go forward and hit gold mineral while dragging it into the depot and dropping the team marker
-        //encoderDrive(TURN_SPEED, 30, -30, 5.0);  // back up turning right
-        //encoderDrive(DRIVE_SPEED,   10, 10, 6.0);  // go forward
-        //encoderDrive(TURN_SPEED, 18, -18, 5.0);  //turn right
-        //encoderDrive(DRIVE_SPEED,   10, 10, 5.0);//go forward
-        //encoderDrive(TURN_SPEED, 5, -5,5.0);//small adjustment to the right
-        //encoderDrive(DRIVE_SPEED*2, 60, 60, 15.0);//go forward and park in crater
-
-
-
-
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
-
     /*
      *  Method to perfmorm a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
