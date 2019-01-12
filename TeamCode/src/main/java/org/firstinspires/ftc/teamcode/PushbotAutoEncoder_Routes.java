@@ -63,8 +63,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="AllRoutes", group="Pushbot")
 public class PushbotAutoEncoder_Routes extends LinearOpMode {
-    private DcMotor  leftDrive   = null;
-    private DcMotor  rightDrive  = null;
+    public DcMotor  leftDrive   = null;
+    public DcMotor  rightDrive  = null;
     //public DcMotor  leftDrive2  = null;
     //public DcMotor  rightDrive2 = null;
 
