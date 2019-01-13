@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -65,8 +66,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class PushbotAutoEncoder_Routes extends LinearOpMode {
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
+    Servo marker;
     //public DcMotor  leftDrive2  = null;
     //public DcMotor  rightDrive2 = null;
+
+
 
     /* Declare OpMode members. */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -78,6 +82,7 @@ public class PushbotAutoEncoder_Routes extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final private double     DRIVE_SPEED             = 0.3;
     static final private double     TURN_SPEED              = 0.5;
+    static final int                CYCLE_MS                = 2000;
 
     @Override
     public void runOpMode() {
@@ -90,11 +95,13 @@ public class PushbotAutoEncoder_Routes extends LinearOpMode {
     public void routesInit(){
         leftDrive = hardwareMap.get(DcMotor.class, "front_left");
         rightDrive = hardwareMap.get(DcMotor.class, "front_right");
+        marker = hardwareMap.get(Servo.class, "marker_servo");
         //leftDrive2 = hardwareMap.get(DcMotor.class, "back_left");
         //rightDrive2 = hardwareMap.get(DcMotor.class, "back_right");
 
         leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        marker.setPosition(0.6);
         //leftDrive2.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         //rightDrive2.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
@@ -145,6 +152,9 @@ public class PushbotAutoEncoder_Routes extends LinearOpMode {
 
     public void facingDepot_middle() {
         encoderDrive(DRIVE_SPEED,  45,45,10.0);  // go forward and hit gold mineral while dragging it into the depot and dropping the team marker
+        marker.setPosition(0);
+        sleep(CYCLE_MS);
+        marker.setPosition(0.6);
         encoderDrive(TURN_SPEED, 12, -12, 5.0);  // back up turning right
         encoderDrive(DRIVE_SPEED,   10, 10, 6.0);  // go forward
         encoderDrive(TURN_SPEED, 5, -5, 5.0);  //turn right
@@ -155,6 +165,7 @@ public class PushbotAutoEncoder_Routes extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
+
     /*
      *  Method to perfmorm a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
