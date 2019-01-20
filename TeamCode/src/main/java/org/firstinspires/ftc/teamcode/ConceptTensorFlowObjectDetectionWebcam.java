@@ -133,10 +133,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
 
 
-        routesInit();
-        encoderDrive(DRIVE_SPEED,  16,16,20.0);
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
+
 
 
         //autoroutes.init();
@@ -153,7 +150,10 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
             while (opModeIsActive()) {
 
                 routesInit();
-                encoderDrive(DRIVE_SPEED,  23,23,5.0);
+                encoderDrive(DRIVE_SPEED,  13,13,5.0);
+                sleep(8000);
+                rightDrive.setPower(0);
+                leftDrive.setPower(0);
 
                 // Exit when x becomes greater than 4
 
