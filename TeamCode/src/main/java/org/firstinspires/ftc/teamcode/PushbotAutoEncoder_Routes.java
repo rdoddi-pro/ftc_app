@@ -63,7 +63,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="AllRoutes", group="Pushbot")
-public class PushbotAutoEncoder_Routes_Siddh extends LinearOpMode {
+public class PushbotAutoEncoder_Routes extends LinearOpMode {
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
     Servo marker;
