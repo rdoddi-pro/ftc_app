@@ -152,15 +152,16 @@ public class PushbotAutoEncoder_Routes extends LinearOpMode {
 
     public void facingDepot_middle() {
         encoderDrive(DRIVE_SPEED,  45,45,10.0);  // go forward and hit gold mineral while dragging it into the depot and dropping the team marker
-        marker.setPosition(0);
+        marker.setPosition(1);
         sleep(CYCLE_MS);
         marker.setPosition(0.6);
-        encoderDrive(TURN_SPEED, 12, -12, 5.0);  // back up turning right
-        encoderDrive(DRIVE_SPEED,   10, 10, 6.0);  // go forward
-        encoderDrive(TURN_SPEED, 5, -5, 5.0);  //turn right
-        encoderDrive(DRIVE_SPEED,   10, 10, 5.0);//go forward
-        encoderDrive(TURN_SPEED, 2.25, -2.25,5.0);//small adjustment to the right
-        encoderDrive(DRIVE_SPEED*2, 60, 60, 15.0);//go forward and park in crater
+        encoderDrive(DRIVE_SPEED, -3, -3, 3.0);
+        encoderDrive(TURN_SPEED, 11, -11, 4.0);  // back up turning right
+        encoderDrive(DRIVE_SPEED,   6, 6, 4.0);  // go forward
+        encoderDrive(TURN_SPEED, 1.75, -1.75, 3.0);  //turn right
+        encoderDrive(DRIVE_SPEED*2,   45, 45, 7.0);//go forward
+        //encoderDrive(TURN_SPEED, 2.25, -2.25,5.0);//small adjustment to the right
+        //encoderDrive(DRIVE_SPEED*2, 60, 60, 15.0);//go forward and park in crater
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
