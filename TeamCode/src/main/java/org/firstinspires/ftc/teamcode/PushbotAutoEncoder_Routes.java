@@ -147,7 +147,7 @@ public class PushbotAutoEncoder_Routes extends LinearOpMode {
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+        //waitForStart();
     }
 
     public void facingDepot_middle() {

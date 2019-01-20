@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -53,8 +54,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGR
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
+
 
 
 /**
@@ -95,7 +95,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * is explained below.
  */
 
-@TeleOp(name="Concept: Vuforia Rover Nav", group ="Concept")
+@Autonomous(name="Concept: Vuforia Rover Nav-Webcam", group ="Concept")
 public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
 
     /*
@@ -172,7 +172,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
         VuforiaTrackable frontCraters = targetsRoverRuckus.get(2);
         frontCraters.setName("Front-Craters");
         VuforiaTrackable backSpace = targetsRoverRuckus.get(3);
-        backSpace.setName("Back-Space");
+        backSpace.setName("Black-Space");
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
         List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
@@ -287,6 +287,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
 
             // check all the trackable target to see which one (if any) is visible.
             targetVisible = false;
+
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                     telemetry.addData("Visible Target", trackable.getName());
@@ -300,6 +301,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
                     }
                     break;
                 }
+
             }
 
             // Provide feedback as to where the robot is located (if we know).

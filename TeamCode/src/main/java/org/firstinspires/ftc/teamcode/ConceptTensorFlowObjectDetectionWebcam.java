@@ -134,7 +134,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
 
         routesInit();
-        encoderDrive(DRIVE_SPEED,  23,23,5.0);
+        encoderDrive(DRIVE_SPEED,  16,16,20.0);
         leftDrive.setPower(0);
         rightDrive.setPower(0);
 
