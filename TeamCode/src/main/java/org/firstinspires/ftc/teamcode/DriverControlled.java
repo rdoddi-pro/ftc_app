@@ -60,8 +60,9 @@ public class DriverControlled extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
-    private DcMotor linearActuator = null;
-    private CRServo crservo;
+    private DcMotor turner = null;
+    private CRServo crservo1;
+    private Servo servo;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -73,10 +74,14 @@ public class DriverControlled extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "back_left");
-        rightDrive = hardwareMap.get(DcMotor.class, "back_right");
-        linearActuator = hardwareMap.get(DcMotor.class, "linear_actuator");
-        crservo = hardwareMap.get(CRServo.class, "left_hand");
+        leftDrive  = hardwareMap.get(DcMotor.class, "front_left");
+        rightDrive = hardwareMap.get(DcMotor.class, "front_right");
+        turner = hardwareMap.get(DcMotor.class, "turner");
+        crservo1 = hardwareMap.get(CRServo.class, "extender");
+        servo = hardwareMap.get(Servo.class, "extend");
+
+
+
 
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -117,12 +122,11 @@ public class DriverControlled extends OpMode
 
         // POV Mode uses left stick to go forward, and right stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
-        double drive = -gamepad1.left_stick_y;
-        double turn  =  gamepad1.right_stick_x;
-        double lin = -gamepad2.right_stick_y;
-        double serv = -gamepad2.left_stick_y;
-        leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-        rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+        double drive = gamepad1.left_stick_y;
+        double driver = gamepad1.right_stick_y;
+        double lin = gamepad2.right_stick_y;
+        double moto = gamepad2.left_stick_y;
+        double ser = gamepad2.left_stick_x;
 
         // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
@@ -130,16 +134,24 @@ public class DriverControlled extends OpMode
         // rightPower = -gamepad1.right_stick_y ;
 
         // Send calculated power to wheels
-        leftDrive.setPower(leftPower);
-        rightDrive.setPower(rightPower);
-        linearActuator.setPower(lin);
-        crservo.setPower(serv);
+        leftDrive.setPower(driver/4);
+        rightDrive.setPower(drive);
+        turner.setPower(moto/2);
+        crservo1.setPower(ser);
+
+        if (gamepad2.b){
+        servo.setPosition(0);
+        }
+        if(gamepad2.a){
+            servo.setPosition(1);
+        }
+
 
 
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+
     }
 
     /*

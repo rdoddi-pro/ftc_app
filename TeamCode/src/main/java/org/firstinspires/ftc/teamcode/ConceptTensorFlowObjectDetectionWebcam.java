@@ -148,12 +148,16 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
             }
 
             while (opModeIsActive()) {
-
+                int i = 0;
+                while (i == 0){
                 routesInit();
-                encoderDrive(DRIVE_SPEED,  13,13,5.0);
-                sleep(8000);
+                encoderDrive(DRIVE_SPEED,  8,8,3.0);
+                sleep(3000);
                 rightDrive.setPower(0);
                 leftDrive.setPower(0);
+                i++;
+                }
+                telemetry.addData("Hello!!", "Now running to go forward");
 
                 // Exit when x becomes greater than 4
 
@@ -172,13 +176,30 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
                               //autoroutes.routesInit();
                               //autoroutes.facingDepot_middle();
                               facedep();
+                              telemetry.addData("Sorry!", "Called FaceDep");
+
                           }
-                          else if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
+                          /*if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
                               servo.setPosition(0);
+                              telemetry.addData("Hello!", "Just Moving the servo");
+                              break;
 
+
+
+                          }*/
+                          else {
+                              servo.setPosition(0);
+                              if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)){
+                                  //checks if the second one is gold or silver
+                              }
+                              else if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)){
+                                  // if silver then will call the third gold.
+                              }
+                          }
 
                           }
-                        }
+
+
                         if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
                           if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                             telemetry.addData("Gold Mineral Position", "Left");
