@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -60,8 +61,17 @@ public class DriverControlled extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
-    private DcMotor linearActuator = null;
-    private CRServo crservo;
+    private DcMotor turner = null;
+    //private CRServo crservo1;
+    private Servo servo;
+    static final private double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final private double     DRIVE_GEAR_REDUCTION    = 1.0;     // This is < 1.0 if geared UP
+    static final private double     WHEEL_DIAMETER_INCHES   = 8.0 ;     // For figuring circumference
+    static final private double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final private double     DRIVE_SPEED             = 0.3;
+    static final private double     TURN_SPEED              = 0.5;
+    static final int                CYCLE_MS                = 2000;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -73,16 +83,25 @@ public class DriverControlled extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "back_left");
-        rightDrive = hardwareMap.get(DcMotor.class, "back_right");
-        linearActuator = hardwareMap.get(DcMotor.class, "linear_actuator");
-        crservo = hardwareMap.get(CRServo.class, "left_hand");
+        leftDrive  = hardwareMap.get(DcMotor.class, "front_left");
+        rightDrive = hardwareMap.get(DcMotor.class, "front_right");
+        //crservo1 = hardwareMap.get(CRServo.class, "extender");
+        servo = hardwareMap.get(Servo.class, "extend");
+        turner  = hardwareMap.get(DcMotor.class, "turner");
+        turner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//yash
+        turner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//yash
+
+
+
+
+
 
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        turner.setDirection(DcMotor.Direction.FORWARD);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -117,12 +136,15 @@ public class DriverControlled extends OpMode
 
         // POV Mode uses left stick to go forward, and right stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
-        double drive = -gamepad1.left_stick_y;
-        double turn  =  gamepad1.right_stick_x;
-        double lin = -gamepad2.right_stick_y;
-        double serv = -gamepad2.left_stick_y;
-        leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-        rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+
+        double drive = gamepad1.left_stick_y;
+        double driver = gamepad1.right_stick_y;
+        //double lin = gamepad2.right_stick_y;
+        double moto = gamepad2.left_stick_y;
+        //double ser = gamepad2.left_stick_x;
+
+        int newLeftTarget;
+        newLeftTarget = turner.getCurrentPosition() + (int)(moto);
 
         // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
@@ -130,16 +152,26 @@ public class DriverControlled extends OpMode
         // rightPower = -gamepad1.right_stick_y ;
 
         // Send calculated power to wheels
-        leftDrive.setPower(leftPower);
-        rightDrive.setPower(rightPower);
-        linearActuator.setPower(lin);
-        crservo.setPower(serv);
+        leftDrive.setPower(driver);
+        rightDrive.setPower(drive);
+        //crservo1.setPower(ser);
+        turner.setPower(moto);
+        turner.setTargetPosition(newLeftTarget);//yash
+
+
+        if (gamepad2.b){
+        servo.setPosition(0);
+        }
+        if(gamepad2.a){
+            servo.setPosition(1);
+        }
+
 
 
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+
     }
 
     /*
