@@ -31,17 +31,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 import java.util.List;
 
@@ -55,8 +53,8 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
-public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
+@TeleOp(name = "AutoFacingCrater", group = "Concept")
+public class AutoFacingCrater extends LinearOpMode {
 
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
@@ -177,7 +175,7 @@ int i = 0;
                               //autoroutes.init();
                               //autoroutes.routesInit();
                               //autoroutes.facingDepot_middle();
-                              facedep();
+                              middle();
                               telemetry.addData("Sorry!", "Called FaceDep");
 
                           }
@@ -193,6 +191,7 @@ int i = 0;
                               servo.setPosition(0.15);
                               if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)){
                                   //checks if the second one is gold or silver
+                                  faceleft();
                               }
                               else if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)){
                                   // if silver then will call the third gold.
@@ -250,11 +249,19 @@ int i = 0;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
-    public void facedep() {
+    public void faceleft() {
         routesInit();
-        facingDepot_middle();
+        facingCrater_left();
+
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
+    }
+    public void middle(){
+        routesInit();
+
+    }
+    public void right(){
+        routesInit();
     }
 
     public void routesInit(){
@@ -313,14 +320,30 @@ int i = 0;
         //waitForStart();
     }
 
-    public void facingDepot_middle() {
-        encoderDrive(DRIVE_SPEED,  22,22,10.0);  // go forward and hit gold mineral while dragging it into the depot and dropping the team marker
-        encoderDrive(TURN_SPEED, 12, -12, 5.0);  // back up turning right
-        encoderDrive(DRIVE_SPEED,   10, 10, 6.0);  // go forward
-        encoderDrive(TURN_SPEED, 5, -5, 5.0);  //turn right
-        encoderDrive(DRIVE_SPEED,   10, 10, 5.0);//go forward
-        encoderDrive(TURN_SPEED, 2.25, -2.25,5.0);//small adjustment to the right
-        encoderDrive(DRIVE_SPEED*2, 60, 60, 15.0);//go forward and park in crater
+
+    public void facingCrater_left() {
+        encoderDrive(DRIVE_SPEED,  5, 5,2.0);  // Go forward
+        encoderDrive(DRIVE_SPEED,  5, -5,5.0);  // turn right
+        encoderDrive(DRIVE_SPEED,  11, 11,5.0); // Go forward and hit the gold mineral on the right
+        encoderDrive(DRIVE_SPEED,  -9, -9,7.0);// back up
+        encoderDrive(DRIVE_SPEED,  -13, 13,7.0); //take hook turn to the left
+        encoderDrive(DRIVE_SPEED,  12, 12,8.0); // go forward
+        encoderDrive(DRIVE_SPEED,  -4, 4,7.0); // turn left
+        encoderDrive(DRIVE_SPEED,  -2, 2,7.0); // align left
+        encoderDrive(DRIVE_SPEED,  19, 19,12.0); // go forward to the depot and drop team marker
+
+
+        //marker.setPosition(1)
+
+        //sleep(CYCLE_MS);
+        //marker.setPosition(0.6);
+        //encoderDrive(DRIVE_SPEED, -3, -3, 3.0);
+        //encoderDrive(TURN_SPEED, 11, -11, 4.0);  // back up turning right
+        //encoderDrive(DRIVE_SPEED,   6, 6, 4.0);  // go forward
+        //encoderDrive(TURN_SPEED, 1.75, -1.75, 3.0);  //turn right
+        //encoderDrive(DRIVE_SPEED*2,   45, 45, 7.0);//go forward
+        //encoderDrive(TURN_SPEED, 2.25, -2.25,5.0);//small adjustment to the right
+        //encoderDrive(DRIVE_SPEED*2, 60, 60, 15.0);//go forward and park in crater
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
