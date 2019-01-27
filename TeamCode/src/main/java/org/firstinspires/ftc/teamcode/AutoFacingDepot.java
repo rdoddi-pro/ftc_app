@@ -137,7 +137,6 @@ public class AutoFacingDepot extends LinearOpMode {
 
 
 
-int i = 0;
         //autoroutes.init();
         //autoroutes.routesInit();
 
@@ -147,21 +146,17 @@ int i = 0;
             /** Activate Tensor Flow Object Detection. */
             if (tfod != null) {
                 tfod.activate();
-            }
-
-            while (opModeIsActive()) {
-
-                if (i == 0){
                 routesInit();
                 encoderDrive(DRIVE_SPEED,  8,8,3.0);
-                sleep(3000);
+                sleep(2000);
                 rightDrive.setPower(0);
                 leftDrive.setPower(0);
                 leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                i++;
-                }
-                telemetry.addData("Hello!!", "Now running to go forward");
+            }
+
+            while (opModeIsActive()) {
+
 
                 // Exit when x becomes greater than 4
 
@@ -180,29 +175,26 @@ int i = 0;
                               //autoroutes.routesInit();
                               //autoroutes.facingDepot_middle();
                               middle();
-                              telemetry.addData("Sorry!", "Called FaceDep");
-
+                              telemetry.addData("Sorry!", "Siddhs middle code");
                           }
-                          /*if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
-                              servo.setPosition(0);
-                              telemetry.addData("Hello!", "Just Moving the servo");
-                              break;
-
-
-
-                          }*/
                           else {
-                              servo.setPosition(0.2);
-                              if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)){
-                                  //checks if the second one is gold or silver
-                                  faceleft();
+
+                              if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
+                                  servo.setPosition(0.1);
+                                  sleep(5000);
+
+                                      if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                          //checks if the second one is gold or silver
+                                          faceleft();
+                                          telemetry.addData("Sorry!", "Called Arin code Left");
+                                      } else if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
+                                          // if silver then will call the third gold.
+                                          faceright();
+                                          telemetry.addData("Sorry!", "Called FaceRight");
+                                      }
                               }
-                              else if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)){
-                                  // if silver then will call the third gold.
-                                  faceright();
-                                  telemetry.addData("Sorry!", "Called FaceRight");
-                              }
-                            }
+                          }
+
 
                           }
 
@@ -342,23 +334,30 @@ int i = 0;
     }
     private void facingDepot_left() {
         encoderDrive(DRIVE_SPEED, 10, 10, 4.0); // go forward
-        encoderDrive(TURN_SPEED, -5, 5, 5.0); // turn left
-        encoderDrive(DRIVE_SPEED, 18, 18, 5.0); // go forward
-        encoderDrive(TURN_SPEED, 9, -9, 5.0);//turn right
-        encoderDrive(DRIVE_SPEED, 13, 13, 4.0); // go forward
+        encoderDrive(TURN_SPEED, 5, -5, 5.0); // turn right
+        encoderDrive(DRIVE_SPEED, 15, 15, 4.0); // go forward
+        encoderDrive(TURN_SPEED, -7, 7, 5.0);// turn left
+        encoderDrive(DRIVE_SPEED, 16, 16, 4.0); // go forward
         marker.setPosition(0.7);
         sleep(CYCLE_MS);
         marker.setPosition(0.1);
-        encoderDrive(TURN_SPEED, 5, -5, 5.0);//turn right
-        encoderDrive(DRIVE_SPEED, 9, 9, 4.0); // go forward
-        encoderDrive(TURN_SPEED, 6, -6, 5.0); // turn right
-        encoderDrive(DRIVE_SPEED * 2, 170, 170, 4.0); //go to crater
+        encoderDrive(DRIVE_SPEED, -4, -4, 5.0); // back up
+        encoderDrive(TURN_SPEED, -20, 20, 5.0); // turn left
 
 
     }
     private void facingDepot_right(){
+            encoderDrive(TURN_SPEED, 5, -5, 5.0); // turn right
+            encoderDrive(DRIVE_SPEED, 15, 15, 4.0); // go forward
+            encoderDrive(TURN_SPEED, -7, 7, 5.0);// turn left
+            encoderDrive(DRIVE_SPEED, 16, 16, 4.0); // go forward
+            marker.setPosition(0.7);
+            sleep(CYCLE_MS);
+            marker.setPosition(0.1);
+            encoderDrive(DRIVE_SPEED, -4, -4, 5.0); // back up
+            encoderDrive(TURN_SPEED, -20, 20, 5.0); // turn left
+        }
 
-    }
     /*
      *  Method to perfmorm a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
