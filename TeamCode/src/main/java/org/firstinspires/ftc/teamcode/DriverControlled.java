@@ -53,7 +53,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="DriverControlled", group="Iterative Opmode")
+@TeleOp(name="Driver Controlled for the Teleop", group="Iterative Opmode")
 public class DriverControlled extends OpMode
 {
     // Declare OpMode members.
@@ -63,6 +63,7 @@ public class DriverControlled extends OpMode
     private DcMotor turner = null;
     private CRServo crservo1;
     private Servo servo;
+    //private DcMotor lin = null;
 
 
     /*
@@ -80,6 +81,7 @@ public class DriverControlled extends OpMode
         crservo1 = hardwareMap.get(CRServo.class, "extender");
         servo = hardwareMap.get(Servo.class, "extend");
         turner  = hardwareMap.get(DcMotor.class, "turner");
+        //lin = hardwareMap.get(DcMotor.class, "linear_actuator");
 
 
 
@@ -126,22 +128,18 @@ public class DriverControlled extends OpMode
         // POV Mode uses left stick to go forward, and right stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
 
-        double drive = gamepad1.left_stick_y;
-        double driver = gamepad1.right_stick_y;
-        //double lin = gamepad2.right_stick_y;
-        double moto = gamepad1.left_trigger;
-        double ser = gamepad1.right_trigger;
+        double drive = gamepad1.left_stick_y;//right wheel joystick
+        double driver = gamepad1.right_stick_y;//left wheel joystick
+        //double lin = gamepad2.right_stick_y; for the linear actuator
+        double moto = gamepad2.left_stick_y;//for the dc motor to lift
+        double ser = gamepad2.right_stick_y; //joystick for continuous servo on arm
 
-        // Tank Mode uses one stick to control each wheel.
-        // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        // leftPower  = -gamepad1.left_stick_y ;
-        // rightPower = -gamepad1.right_stick_y ;
 
         // Send calculated power to wheels
-        leftDrive.setPower(driver);
-        rightDrive.setPower(drive);
-        crservo1.setPower(ser);
-        turner.setPower(moto);
+        leftDrive.setPower(driver); //left wheel
+        rightDrive.setPower(drive);//right wheel
+        crservo1.setPower(ser);//crservo for arm
+        turner.setPower(moto);//dc motor with worm gear
 
         if (gamepad2.b){
         servo.setPosition(0);
@@ -149,12 +147,6 @@ public class DriverControlled extends OpMode
         if(gamepad2.a){
             servo.setPosition(1);
         }
-
-
-
-
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
 
     }
 
