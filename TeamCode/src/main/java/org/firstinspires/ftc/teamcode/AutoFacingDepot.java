@@ -111,6 +111,7 @@ public class AutoFacingDepot extends LinearOpMode {
     private TFObjectDetector tfod;
 
 
+
     @Override
     public void runOpMode() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
@@ -165,46 +166,53 @@ public class AutoFacingDepot extends LinearOpMode {
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
-                      telemetry.addData("# Object Detected", updatedRecognitions.size());
+                        telemetry.addData("# Object Detected", updatedRecognitions.size());
                         int goldMineralX = -1;
                         int silverMineral1X = -1;
                         int silverMineral2X = -1;
                         for (Recognition recognition : updatedRecognitions) {
-                          if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                              //autoroutes.init();
-                              //autoroutes.routesInit();
-                              //autoroutes.facingDepot_middle();
-                              middle();
-                              telemetry.addData("Sorry!", "Siddhs middle code");
+                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                //autoroutes.init();
+                                //autoroutes.routesInit();
+                                //autoroutes.facingDepot_middle();
+                                middle();
+                            }
+                        }
+                    }
+                }
+
+                                else {
+                                servo.setPosition(0.6);
+                                sleep(8000);
+                                    if (tfod != null) {
+                                        // getUpdatedRecognitions() will return null if no new information is available since
+                                        // the last time that call was made.
+                                        List<Recognition> updatedRecognitions1 = tfod.getUpdatedRecognitions();
+                                        if (updatedRecognitions1 != null) {
+                                            telemetry.addData("# Object Detected", updatedRecognitions1.size());
+                                            for (Recognition recognition1 : updatedRecognitions1) {
+
+                                                if (recognition1.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                                    faceright();
+                                                    telemetry.addData("", "Called right");
+                                                }
+                                                else {
+                                                    faceleft();
+                                                    telemetry.addData("", "Called left");
+                                                }
+                                            }
+                                        }
+                                    }
+                                 }
                           }
-                          else {
-
-                              if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
-                                  servo.setPosition(0.1);
-                                  sleep(5000);
-
-                                      if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                          //checks if the second one is gold or silver
-                                          faceleft();
-                                          telemetry.addData("Sorry!", "Called Arin code Left");
-                                      } else if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
-                                          // if silver then will call the third gold.
-                                          faceright();
-                                          telemetry.addData("Sorry!", "Called FaceRight");
-                                      }
-                              }
-                          }
 
 
-                          }
 
 
 
                       telemetry.update();
                     }
-                }
-            }
-        }
+
 
         if (tfod != null) {
             tfod.shutdown();
@@ -316,7 +324,7 @@ public class AutoFacingDepot extends LinearOpMode {
     }
 
     public void facingDepot_middle() {
-        encoderDrive(DRIVE_SPEED,  45,45,10.0);  // go forward and hit gold mineral while dragging it into the depot and dropping the team marker
+        encoderDrive(DRIVE_SPEED,  29,29,10.0);  // go forward and hit gold mineral while dragging it into the depot and dropping the team marker
         marker.setPosition(0.7);
         sleep(CYCLE_MS);
         marker.setPosition(0.1);
@@ -333,29 +341,32 @@ public class AutoFacingDepot extends LinearOpMode {
         telemetry.update();
     }
     private void facingDepot_left() {
-        encoderDrive(DRIVE_SPEED, 10, 10, 4.0); // go forward
-        encoderDrive(TURN_SPEED, 5, -5, 5.0); // turn right
-        encoderDrive(DRIVE_SPEED, 15, 15, 4.0); // go forward
-        encoderDrive(TURN_SPEED, -7, 7, 5.0);// turn left
-        encoderDrive(DRIVE_SPEED, 16, 16, 4.0); // go forward
+
+        encoderDrive(TURN_SPEED, -5, 5, 3.0); // turn left
+        encoderDrive(DRIVE_SPEED, 18, 18, 4.0); // go forward
+        encoderDrive(TURN_SPEED, 9, -9, 4.0);//turn right
+        encoderDrive(DRIVE_SPEED, 13, 13, 3.0); // go forward
         marker.setPosition(0.7);
         sleep(CYCLE_MS);
         marker.setPosition(0.1);
-        encoderDrive(DRIVE_SPEED, -4, -4, 5.0); // back up
-        encoderDrive(TURN_SPEED, -20, 20, 5.0); // turn left
+        encoderDrive(TURN_SPEED, 5, -5, 3.0);//turn right
+        encoderDrive(DRIVE_SPEED, 9, 9, 3.0); // go forward
+        encoderDrive(TURN_SPEED, 6, -6, 3.0); // turn right
+        encoderDrive(DRIVE_SPEED * 2, 170, 170, 5.0); //go to crater
 
 
     }
     private void facingDepot_right(){
-            encoderDrive(TURN_SPEED, 5, -5, 5.0); // turn right
-            encoderDrive(DRIVE_SPEED, 15, 15, 4.0); // go forward
-            encoderDrive(TURN_SPEED, -7, 7, 5.0);// turn left
-            encoderDrive(DRIVE_SPEED, 16, 16, 4.0); // go forward
-            marker.setPosition(0.7);
-            sleep(CYCLE_MS);
-            marker.setPosition(0.1);
-            encoderDrive(DRIVE_SPEED, -4, -4, 5.0); // back up
-            encoderDrive(TURN_SPEED, -20, 20, 5.0); // turn left
+
+        encoderDrive(TURN_SPEED, 5, -5, 3.0); // turn right
+        encoderDrive(DRIVE_SPEED, 15, 15, 4.0); // go forward
+        encoderDrive(TURN_SPEED, -7, 7, 3.0);// turn left
+        encoderDrive(DRIVE_SPEED, 16, 16, 3.0); // go forward
+        marker.setPosition(0.7);
+        sleep(CYCLE_MS);
+        marker.setPosition(0.1);
+        encoderDrive(TURN_SPEED, -3, 3, 2.0); // turn left
+        encoderDrive(DRIVE_SPEED*2, -180, -180, 5.0); //go to crater
         }
 
     /*
