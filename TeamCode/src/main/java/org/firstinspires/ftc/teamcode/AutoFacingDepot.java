@@ -82,8 +82,6 @@ public class AutoFacingDepot extends LinearOpMode {
     Servo servo;
     Servo marker;
 
-
-
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
      * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
@@ -110,21 +108,14 @@ public class AutoFacingDepot extends LinearOpMode {
      */
     private TFObjectDetector tfod;
 
-
-
     @Override
     public void runOpMode() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         initVuforia();
 
-
         servo = hardwareMap.get(Servo.class, "servo_cam");
         marker = hardwareMap.get(Servo.class, "marker_servo");
-
-
-
-
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
@@ -133,10 +124,6 @@ public class AutoFacingDepot extends LinearOpMode {
         }
 
         /** Wait for the game to begin */
-
-
-
-
 
         //autoroutes.init();
         //autoroutes.routesInit();
@@ -158,13 +145,13 @@ public class AutoFacingDepot extends LinearOpMode {
 
             while (opModeIsActive()) {
 
-
                 // Exit when x becomes greater than 4
 
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                    // We are starting pointing towards "middle"
                     if (updatedRecognitions != null) {
                         telemetry.addData("# Object Detected", updatedRecognitions.size());
                         int goldMineralX = -1;
@@ -178,38 +165,33 @@ public class AutoFacingDepot extends LinearOpMode {
                                 middle();
                             }
                         }
+                    } 
+                    else { // point camera towards right
+                        servo.setPosition(0.6);
+                        sleep(8000);
+                        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                        if (updatedRecognitions != null) {
+                            telemetry.addData("# Object Detected", updatedRecognitions.size());
+                            boolean goldFound = false;
+                            for (Recognition recognition1 : updatedRecognitions) {
+                                if (recognition1.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                    goldFound = true;
+                                    break;
+                                }
+                            }
+                            if (goldFound) {
+                                faceright();
+                                telemetry.addData("", "Called right");
+                            } else {
+                                faceleft();
+                                telemetry.addData("", "Called left");
+                            }
+                        }
                     }
-
-                                else {
-                                servo.setPosition(0.6);
-                                sleep(8000);
-
-                                        List<Recognition> updatedRecognitions1 = tfod.getUpdatedRecognitions();
-                                        if (updatedRecognitions1 != null) {
-                                            telemetry.addData("# Object Detected", updatedRecognitions1.size());
-                                            for (Recognition recognition1 : updatedRecognitions1) {
-
-                                                if (recognition1.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                                    faceright();
-                                                    telemetry.addData("", "Called right");
-                                                }
-                                                else {
-                                                    faceleft();
-                                                    telemetry.addData("", "Called left");
-                                                }
-                                            }
-                                        }
-                                    }
-                                 }
-                          }
-
-
-
-
-
-                      telemetry.update();
-                    }
-
+                }
+            }
+            telemetry.update();
+        }
 
         if (tfod != null) {
             tfod.shutdown();
