@@ -179,14 +179,11 @@ public class AutoFacingDepot extends LinearOpMode {
                             }
                         }
                     }
-                }
 
                                 else {
                                 servo.setPosition(0.6);
                                 sleep(8000);
-                                    if (tfod != null) {
-                                        // getUpdatedRecognitions() will return null if no new information is available since
-                                        // the last time that call was made.
+
                                         List<Recognition> updatedRecognitions1 = tfod.getUpdatedRecognitions();
                                         if (updatedRecognitions1 != null) {
                                             telemetry.addData("# Object Detected", updatedRecognitions1.size());
