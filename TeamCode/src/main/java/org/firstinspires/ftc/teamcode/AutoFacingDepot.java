@@ -127,6 +127,7 @@ public class AutoFacingDepot extends LinearOpMode {
 
         //autoroutes.init();
         //autoroutes.routesInit();
+        servo.setPosition(0.45);
 
         waitForStart();
 
@@ -135,7 +136,7 @@ public class AutoFacingDepot extends LinearOpMode {
             if (tfod != null) {
                 tfod.activate();
                 routesInit();
-                encoderDrive(DRIVE_SPEED,  8,8,3.0);
+                encoderDrive(DRIVE_SPEED, 8, 8, 3.0);
                 sleep(2000);
                 rightDrive.setPower(0);
                 leftDrive.setPower(0);
@@ -151,50 +152,48 @@ public class AutoFacingDepot extends LinearOpMode {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                    // We are starting pointing towards "middle"
                     if (updatedRecognitions != null) {
                         telemetry.addData("# Object Detected", updatedRecognitions.size());
-                        int goldMineralX = -1;
-                        int silverMineral1X = -1;
-                        int silverMineral2X = -1;
+                        // We are starting pointing towards "middle"
+                        boolean foundGold = false;
                         for (Recognition recognition : updatedRecognitions) {
                             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                                 //autoroutes.init();
                                 //autoroutes.routesInit();
                                 //autoroutes.facingDepot_middle();
-                                middle();
+                                foundGold = true;
+                                break;
                             }
                         }
-                    } 
-                    else { // point camera towards right
-                        servo.setPosition(0.6);
-                        sleep(8000);
-                        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                        if (updatedRecognitions != null) {
-                            telemetry.addData("# Object Detected", updatedRecognitions.size());
-                            boolean goldFound = false;
-                            for (Recognition recognition1 : updatedRecognitions) {
-                                if (recognition1.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    goldFound = true;
-                                    break;
+                        if (foundGold) {
+                            middle();
+                        } else {
+                            // point the camera to "right"
+                            servo.setPosition(0.6);
+                            sleep(8000);
+                            updatedRecognitions = tfod.getUpdatedRecognitions();
+                            if (updatedRecognitions != null) {
+                                for (Recognition recognition : updatedRecognitions) {
+                                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                        foundGold = true;
+                                        break;
+                                    }
+                                }
+                                if (foundGold) {
+                                    facingDepot_right();
+                                } else {
+                                    facingDepot_left();
                                 }
                             }
-                            if (goldFound) {
-                                faceright();
-                                telemetry.addData("", "Called right");
-                            } else {
-                                faceleft();
-                                telemetry.addData("", "Called left");
-                            }
                         }
+                        telemetry.update();
+                    }
+
+                    if (tfod != null) {
+                        tfod.shutdown();
                     }
                 }
             }
-            telemetry.update();
-        }
-
-        if (tfod != null) {
-            tfod.shutdown();
         }
     }
 
