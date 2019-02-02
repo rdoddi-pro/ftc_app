@@ -62,8 +62,9 @@ public class DriverControlled extends OpMode
     private DcMotor rightDrive = null;
     private DcMotor turner = null;
     private CRServo crservo1;
-    private Servo servo;
-    //private DcMotor lin = null;
+    private CRServo servo1;
+    private CRServo crservo2;
+    private DcMotor lin = null;
 
 
     /*
@@ -79,9 +80,10 @@ public class DriverControlled extends OpMode
         leftDrive  = hardwareMap.get(DcMotor.class, "front_left");
         rightDrive = hardwareMap.get(DcMotor.class, "front_right");
         crservo1 = hardwareMap.get(CRServo.class, "extender");
-        servo = hardwareMap.get(Servo.class, "extend");
-        turner  = hardwareMap.get(DcMotor.class, "turner");
-        //lin = hardwareMap.get(DcMotor.class, "linear_actuator");
+        crservo2 = hardwareMap.get(CRServo.class, "rotator");
+        servo1 = hardwareMap.get(CRServo.class, "box_turner");
+        turner  = hardwareMap.get(DcMotor.class, "arm_turner");
+        lin = hardwareMap.get(DcMotor.class, "linear_actuator");
 
 
 
@@ -130,23 +132,23 @@ public class DriverControlled extends OpMode
 
         double drive = gamepad1.left_stick_y;//right wheel joystick
         double driver = gamepad1.right_stick_y;//left wheel joystick
-        //double lin = gamepad2.right_stick_y; for the linear actuator
-        double moto = gamepad2.left_stick_y;//for the dc motor to lift
-        double ser = gamepad2.right_stick_y; //joystick for continuous servo on arm
+        double linear = gamepad2.right_stick_x; //joystick for lin
+
+        double moto = gamepad2.left_stick_y;//for the dc motor to lift arms
+        double ser = gamepad2.right_stick_y; //joystick for continuous servo on arm to extend x-rail
+        double val = gamepad2.left_stick_x; // value for the rotation within the picker
+        double pow = gamepad2.left_trigger;
 
 
         // Send calculated power to wheels
         leftDrive.setPower(driver); //left wheel
         rightDrive.setPower(drive);//right wheel
-        crservo1.setPower(ser);//crservo for arm
-        turner.setPower(moto);//dc motor with worm gear
-
-        if (gamepad2.b){
-        servo.setPosition(0);
-        }
-        if(gamepad2.a){
-            servo.setPosition(1);
-        }
+        crservo1.setPower(ser);//crservo for arm extension
+        turner.setPower(moto/2);//dc motor with worm gear
+        lin.setPower(linear);//setting power for linear actuator
+        crservo2.setPower(val);
+        servo1.setPower(pow);
+        
 
     }
 
