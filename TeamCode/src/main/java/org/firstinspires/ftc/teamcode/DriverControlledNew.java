@@ -29,17 +29,12 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import static android.R.interpolator.linear;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /**
@@ -56,18 +51,16 @@ import static android.R.interpolator.linear;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Driver Controlled mqin", group="Iterative Opmode")
-public class DriverControlled extends OpMode
+@TeleOp(name="Driver Controlled New", group="Iterative Opmode")
+public class DriverControlledNew extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
-    private DcMotor turner = null;
-    private CRServo crservo1;
-    private CRServo servo1;
-    private CRServo crservo2;
-    private DcMotor lin = null;
+    Servo arm;
+    private CRServo rotator;
+    private DcMotor actuator = null;
 
 
     /*
@@ -77,19 +70,14 @@ public class DriverControlled extends OpMode
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
+        // Initialize the harStatus", "Initialized");dware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotor.class, "front_left");
         rightDrive = hardwareMap.get(DcMotor.class, "front_right");
-        //hook = hardwareMap.get(Servo.class, "hook");
-        crservo1 = hardwareMap.get(CRServo.class, "extender");
-        crservo2 = hardwareMap.get(CRServo.class, "rotator");
-        servo1 = hardwareMap.get(CRServo.class, "box_turner");
-        turner  = hardwareMap.get(DcMotor.class, "arm_turner");
-        lin = hardwareMap.get(DcMotor.class, "linear_actuator");
-
-
+        rotator = hardwareMap.get(CRServo.class, "rotator");
+        arm = hardwareMap.get(Servo.class, "box_turner");
+        actuator = hardwareMap.get(DcMotor.class, "linear_actuator");
 
 
 
@@ -102,6 +90,7 @@ public class DriverControlled extends OpMode
         // Reverse the motor that runs backwards when connected directly to the battery
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        arm.setPosition(1);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -141,20 +130,28 @@ public class DriverControlled extends OpMode
         double driver = gamepad1.right_stick_y;//left wheel joystick
         double linear = gamepad1.right_stick_x; //joystick for lin
 
-        double moto = gamepad2.left_stick_y;//for the dc motor to lift arms
-        double ser = gamepad2.right_stick_y; //joystick for continuous servo on arm to extend x-rail
-        double val = gamepad2.left_stick_x; // value for the rotation within the picker
-        double pow = gamepad2.left_trigger;
+        if(gamepad2.a) {
+            arm.setPosition(0);
+
+        } else if(gamepad2.b){
+            arm.setPosition(0.5);
+        } else if(gamepad2.y) {
+            arm.setPosition(1);
+        }
+        double rot = gamepad2.left_stick_y;
+
+
+
+
+
 
 
         // Send calculated power to wheels
         leftDrive.setPower(driver); //left wheel
         rightDrive.setPower(drive);//right wheel
-        crservo1.setPower(ser);//crservo for arm extension
-        turner.setPower(moto/4);//dc motor with worm gear
-        lin.setPower(linear);//setting power for linear actuator
-        crservo2.setPower(val);
-        servo1.setPower(pow);
+        actuator.setPower(linear);//setting power for linear actuator
+        rotator.setPower(rot);
+
 
 
     }
