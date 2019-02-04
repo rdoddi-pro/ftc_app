@@ -34,12 +34,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import static android.R.interpolator.linear;
 
 
 /**
@@ -56,7 +53,7 @@ import static android.R.interpolator.linear;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Driver Controlled mqin", group="Iterative Opmode")
+@TeleOp(name="Driver Controlled for the Teleop", group="Iterative Opmode")
 public class DriverControlled extends OpMode
 {
     // Declare OpMode members.
@@ -82,15 +79,11 @@ public class DriverControlled extends OpMode
         // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotor.class, "front_left");
         rightDrive = hardwareMap.get(DcMotor.class, "front_right");
-        //hook = hardwareMap.get(Servo.class, "hook");
         crservo1 = hardwareMap.get(CRServo.class, "extender");
         crservo2 = hardwareMap.get(CRServo.class, "rotator");
         servo1 = hardwareMap.get(CRServo.class, "box_turner");
         turner  = hardwareMap.get(DcMotor.class, "arm_turner");
         lin = hardwareMap.get(DcMotor.class, "linear_actuator");
-
-
-
 
 
 
@@ -139,7 +132,7 @@ public class DriverControlled extends OpMode
 
         double drive = gamepad1.left_stick_y;//right wheel joystick
         double driver = gamepad1.right_stick_y;//left wheel joystick
-        double linear = gamepad1.right_stick_x; //joystick for lin
+        double linear = gamepad2.right_stick_x; //joystick for lin
 
         double moto = gamepad2.left_stick_y;//for the dc motor to lift arms
         double ser = gamepad2.right_stick_y; //joystick for continuous servo on arm to extend x-rail
@@ -151,11 +144,11 @@ public class DriverControlled extends OpMode
         leftDrive.setPower(driver); //left wheel
         rightDrive.setPower(drive);//right wheel
         crservo1.setPower(ser);//crservo for arm extension
-        turner.setPower(moto/4);//dc motor with worm gear
+        turner.setPower(moto/2);//dc motor with worm gear
         lin.setPower(linear);//setting power for linear actuator
         crservo2.setPower(val);
         servo1.setPower(pow);
-
+        
 
     }
 

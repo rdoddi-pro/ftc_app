@@ -30,14 +30,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -66,13 +62,15 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Route2-FacingCrater", group="Pushbot")
-public class PushbotAutoEncoder_FacingCraterRt2Working extends LinearOpMode {
-    private DcMotor  leftDrive   = null;
-    private DcMotor  rightDrive  = null;
+@Autonomous(name="RoutesArin", group="Pushbot")
+public class PushbotAutoEncoder_RoutesArin extends LinearOpMode {
+    public DcMotor  leftDrive   = null;
+    public DcMotor  rightDrive  = null;
     Servo marker;
     //public DcMotor  leftDrive2  = null;
     //public DcMotor  rightDrive2 = null;
+
+
 
     /* Declare OpMode members. */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -81,15 +79,23 @@ public class PushbotAutoEncoder_FacingCraterRt2Working extends LinearOpMode {
     static final private double     DRIVE_GEAR_REDUCTION    = 1.0;     // This is < 1.0 if geared UP
     static final private double     WHEEL_DIAMETER_INCHES   = 8.0 ;     // For figuring circumference
     static final private double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
     static final private double     DRIVE_SPEED             = 0.3;
     static final private double     TURN_SPEED              = 0.5;
     static final int                CYCLE_MS                = 2000;
 
-
     @Override
     public void runOpMode() {
-        leftDrive  = hardwareMap.get(DcMotor.class, "front_left");
+        routesInit();
+        //facingDepot_middle();
+        //facingDepot_left();
+        facingDepot_right();
+        // Step through each leg of the path,
+        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+    }
+
+    public void routesInit(){
+        leftDrive = hardwareMap.get(DcMotor.class, "front_left");
         rightDrive = hardwareMap.get(DcMotor.class, "front_right");
         marker = hardwareMap.get(Servo.class, "marker_servo");
         //leftDrive2 = hardwareMap.get(DcMotor.class, "back_left");
@@ -129,55 +135,68 @@ public class PushbotAutoEncoder_FacingCraterRt2Working extends LinearOpMode {
         //rightDrive2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
-
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //leftDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //rightDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
+        telemetry.addData("Path0", "Starting at %7d :%7d",
                 leftDrive.getCurrentPosition(),
                 rightDrive.getCurrentPosition());
-
-
 
 
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+        //waitForStart();
+    }
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  22,22,6.0);  // go forward and touch gold mineral
-        encoderDrive(DRIVE_SPEED, -13, -13, 4.0);//go backward
-        encoderDrive(TURN_SPEED, -6, 6, 5.0);//turn left
-        encoderDrive(DRIVE_SPEED, 28,28, 7.0);//go forward
-        encoderDrive(TURN_SPEED, -6, 6, 5.0 );//turn left
-        encoderDrive(DRIVE_SPEED, 15, 15, 5.0);//go forward
-        encoderDrive(TURN_SPEED, -1.25, 1.25, 3.0);//turn left a little
-        encoderDrive(DRIVE_SPEED, 23, 23, 6.0);//go forward to the depot and drop team marker
+    //public void facingDepot_middle( {
+        //encoderDrive(DRIVE_SPEED ,  45,45,10.0);  // go forward and hit gold mineral while dragging it into the depot and dropping the team marker
+        //marker.setPosition(1);
+        //sleep(CYCLE_MS);
+        //marker.setPosition(0.6);
+        //encoderDrive(DRIVE_SPEED, -3, -3, 3.0);
+        //encoderDrive(TURN_SPEED, 11, -11, 4.0);  // back up turning right
+        //encoderDrive(DRIVE_SPEED,   6, 6, 4.0);  // go forward
+        //encoderDrive(TURN_SPEED, 1.75, -1.75, 3.0);  //turn right
+        //encoderDrive(DRIVE_SPEED*2,   45, 45, 7.0);//go forward
+        //encoderDrive(TURN_SPEED, 2.25, -2.25,5.0);//small adjustment to the right
+        //encoderDrive(DRIVE_SPEED*2, 60, 60, 15.0);//go forward and park in crater
+
+        //telemetry.addData("Path", "Complete");
+        //telemetry.update();
+        private void facingDepot_left() {
+            encoderDrive(DRIVE_SPEED, 10, 10, 4.0); // go forward
+            encoderDrive(TURN_SPEED, -5, 5, 5.0); // turn left
+            encoderDrive(DRIVE_SPEED, 18, 18, 5.0); // go forward
+            encoderDrive(TURN_SPEED, 9, -9, 5.0);//turn right
+            encoderDrive(DRIVE_SPEED, 13, 13, 4.0); // go forward
+            marker.setPosition(0.7);
+            sleep(CYCLE_MS);
+            marker.setPosition(0.1);
+            encoderDrive(TURN_SPEED, 5, -5, 5.0);//turn right
+            encoderDrive(DRIVE_SPEED, 9, 9, 4.0); // go forward
+            encoderDrive(TURN_SPEED, 6, -6, 5.0); // turn right
+            encoderDrive(DRIVE_SPEED * 2, 170, 170, 4.0); //go to crater
+
+
+        }
+    private void facingDepot_right() {
+        encoderDrive(DRIVE_SPEED, 10, 10, 4.0); // go forward
+        encoderDrive(TURN_SPEED, 5, -5, 5.0); // turn right
+        encoderDrive(DRIVE_SPEED, 15, 15, 4.0); // go forward
+        encoderDrive(TURN_SPEED, -7, 7, 5.0);// turn left
+        encoderDrive(DRIVE_SPEED, 16, 16, 4.0); // go forward
         marker.setPosition(0.7);
         sleep(CYCLE_MS);
         marker.setPosition(0.1);
-        encoderDrive(DRIVE_SPEED*2, -75, -75, 10.0);//go backward and park in crater
-
-        //this block is for the previous wheels(without omni)
-        //encoderDrive(DRIVE_SPEED,  25,25,6.0);  // go forward and touch gold mineral
-        //encoderDrive(DRIVE_SPEED, -15, -15, 4.0);//go backward
-        //encoderDrive(TURN_SPEED, -22, 22, 5.0);//turn left
-        //encoderDrive(DRIVE_SPEED, 35,35, 7.0);//go forward
-        //encoderDrive(TURN_SPEED, -22, 22, 5.0 );//turn left
-        //encoderDrive(DRIVE_SPEED, 15, 15, 5.0);//go forward
-        //encoderDrive(TURN_SPEED, -10.5, 10.5, 3.0);//turn left a little
-        //encoderDrive(DRIVE_SPEED, 35, 35, 6.0);//go forward to the depot and drop team marker
-        //encoderDrive(DRIVE_SPEED*1.25, -80, -80, 10.0);//go backward and park in crater
-
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+        encoderDrive(DRIVE_SPEED, -4, -4, 5.0); // back up
+        encoderDrive(TURN_SPEED, -20, 20, 5.0); // turn left
     }
+
+
 
     /*
      *  Method to perfmorm a relative move, based on encoder counts.
@@ -188,8 +207,8 @@ public class PushbotAutoEncoder_FacingCraterRt2Working extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
     private void encoderDrive(double speed,
-                              double leftInches, double rightInches,
-                              double timeoutS) {
+                             double leftInches, double rightInches,
+                             double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
 
@@ -226,16 +245,16 @@ public class PushbotAutoEncoder_FacingCraterRt2Working extends LinearOpMode {
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (leftDrive.isBusy() && rightDrive.isBusy())) {
+                   (runtime.seconds() < timeoutS) &&
+                   (leftDrive.isBusy() && rightDrive.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                        leftDrive.getCurrentPosition(),
-                        rightDrive.getCurrentPosition());
-                //leftDrive2.getCurrentPosition(),
-                //rightDrive2.getCurrentPosition());
+                                            leftDrive.getCurrentPosition(),
+                                            rightDrive.getCurrentPosition());
+                                            //leftDrive2.getCurrentPosition(),
+                                            //rightDrive2.getCurrentPosition());
                 telemetry.update();
             }
 
@@ -254,8 +273,7 @@ public class PushbotAutoEncoder_FacingCraterRt2Working extends LinearOpMode {
 
 
 
-            sleep(2500);   // optional pause after each move
+              sleep(2500);   // optional pause after each move
         }
     }
 }
-

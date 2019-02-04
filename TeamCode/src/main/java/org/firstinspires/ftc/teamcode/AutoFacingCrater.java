@@ -29,19 +29,17 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 import java.util.List;
 
@@ -55,8 +53,8 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
-public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
+@Autonomous(name = "AutoFacingCrater-Yash", group = "Concept")
+public class AutoFacingCrater extends LinearOpMode {
 
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
@@ -78,8 +76,11 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final private double     DRIVE_SPEED             = 0.3;
     static final private double     TURN_SPEED              = 0.5;
+    static final int                CYCLE_MS                = 2000;
+
     //end of Siddh code
     Servo servo;
+    Servo marker;
 
 
 
@@ -118,6 +119,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
 
         servo = hardwareMap.get(Servo.class, "servo_cam");
+        marker = hardwareMap.get(Servo.class, "marker_servo");
 
 
 
@@ -135,7 +137,6 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
 
 
-int i = 0;
         //autoroutes.init();
         //autoroutes.routesInit();
 
@@ -143,23 +144,19 @@ int i = 0;
 
         if (opModeIsActive()) {
             /** Activate Tensor Flow Object Detection. */
+            routesInit();
+            encoderDrive(DRIVE_SPEED,  8,8,3.0);
+            sleep(2000);
+            rightDrive.setPower(0);
+            leftDrive.setPower(0);
+            leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             if (tfod != null) {
                 tfod.activate();
             }
 
             while (opModeIsActive()) {
 
-                if (i == 0){
-                routesInit();
-                encoderDrive(DRIVE_SPEED,  8,8,3.0);
-                sleep(3000);
-                rightDrive.setPower(0);
-                leftDrive.setPower(0);
-                leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                i++;
-                }
-                telemetry.addData("Hello!!", "Now running to go forward");
 
                 // Exit when x becomes greater than 4
 
@@ -169,48 +166,35 @@ int i = 0;
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
                       telemetry.addData("# Object Detected", updatedRecognitions.size());
-                        int goldMineralX = -1;
-                        int silverMineral1X = -1;
-                        int silverMineral2X = -1;
+
                         for (Recognition recognition : updatedRecognitions) {
                           if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                              //autoroutes.init();
-                              //autoroutes.routesInit();
-                              //autoroutes.facingDepot_middle();
-                              facedep();
-                              telemetry.addData("Sorry!", "Called FaceDep");
-
+                              middle();
+                              telemetry.addData("", "Siddhs middle code");
                           }
-                          /*if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
-                              servo.setPosition(0);
-                              telemetry.addData("Hello!", "Just Moving the servo");
-                              break;
-
-
-
-                          }*/
                           else {
-                              servo.setPosition(0.15);
-                              if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)){
-                                  //checks if the second one is gold or silver
+
+                              if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
+                                  servo.setPosition(0.125);
+                                  sleep(5000);
+
+                                      if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                          //checks if the second one is gold or silver
+                                          faceleft();
+                                          telemetry.addData("", "Called Arin code Left");
+                                      } else if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
+                                          // if silver then will call the third gold.
+                                          faceright();
+                                          telemetry.addData("", "Called FaceRight");
+                                      }
                               }
-                              else if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)){
-                                  // if silver then will call the third gold.
-                              }
                           }
+
 
                           }
 
 
-                        if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                          if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Left");
-                          } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Right");
-                          } else {
-                            telemetry.addData("Gold Mineral Position", "Center");
-                          }
-                      }
+
                       telemetry.update();
                     }
                 }
@@ -250,12 +234,25 @@ int i = 0;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
-    public void facedep() {
+    public void middle() {
         routesInit();
-        facingDepot_middle();
+        facingCrater_middle();
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
     }
+    public void faceleft() {
+        routesInit();
+        facingCrater_left();
+
+        // Step through each leg of the path,
+        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+    }
+
+    public void faceright(){
+        routesInit();
+        facingCrater_right();
+    }
+
 
     public void routesInit(){
         leftDrive = hardwareMap.get(DcMotor.class, "front_left");
@@ -313,18 +310,47 @@ int i = 0;
         //waitForStart();
     }
 
-    public void facingDepot_middle() {
-        encoderDrive(DRIVE_SPEED,  22,22,10.0);  // go forward and hit gold mineral while dragging it into the depot and dropping the team marker
-        encoderDrive(TURN_SPEED, 12, -12, 5.0);  // back up turning right
-        encoderDrive(DRIVE_SPEED,   10, 10, 6.0);  // go forward
-        encoderDrive(TURN_SPEED, 5, -5, 5.0);  //turn right
-        encoderDrive(DRIVE_SPEED,   10, 10, 5.0);//go forward
-        encoderDrive(TURN_SPEED, 2.25, -2.25,5.0);//small adjustment to the right
-        encoderDrive(DRIVE_SPEED*2, 60, 60, 15.0);//go forward and park in crater
+    public void facingCrater_middle() {
+        encoderDrive(DRIVE_SPEED,  13,13,6.0);  // go forward and touch gold mineral
+        encoderDrive(DRIVE_SPEED, -13, -13, 4.0);//go backward
+        encoderDrive(TURN_SPEED, -6, 6, 5.0);//turn left
+        encoderDrive(DRIVE_SPEED, 28,28, 7.0);//go forward
+        encoderDrive(TURN_SPEED, -6, 6, 5.0 );//turn left
+        encoderDrive(DRIVE_SPEED, 15, 15, 5.0);//go forward
+        encoderDrive(TURN_SPEED, -0.8, 0.8, 2.0);//turn left a little
+        encoderDrive(DRIVE_SPEED, 23, 23, 6.0);//go forward to the depot and drop team marker
+        marker.setPosition(0.7);
+        sleep(CYCLE_MS);
+        marker.setPosition(0.1);
+        encoderDrive(DRIVE_SPEED*2, -75, -75, 10.0);//go backward and park in crater
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
+    private void facingCrater_left() {
+        encoderDrive(DRIVE_SPEED,  -5, -5,2.0); // Go back
+        encoderDrive(DRIVE_SPEED,  -3, 3,5.0);  // turn left
+        encoderDrive(DRIVE_SPEED,  11, 11,5.0); // Go forward and hit the gold mineral on the left
+
+
+    }
+    private void facingCrater_right(){
+        encoderDrive(DRIVE_SPEED,  5, -3,5.0);  // turn right
+        encoderDrive(DRIVE_SPEED,  11, 11,5.0); // Go forward and hit the gold mineral on the right
+        encoderDrive(DRIVE_SPEED,  -10, -10,7.0);// back up
+        encoderDrive(DRIVE_SPEED,  -11, 11,7.0); //take hook turn to the left
+        encoderDrive(DRIVE_SPEED,  30, 30,8.0); // go forward
+        encoderDrive(DRIVE_SPEED,  -3.5,4.5,7.0); // turn left
+        encoderDrive(TURN_SPEED,   -1.10, 1.10,5.0);//small adjustment to the left
+        encoderDrive(DRIVE_SPEED,  38, 38,7.0); // go forward to the depot and drop team marker
+        marker.setPosition(0.7);
+        sleep(CYCLE_MS);
+        marker.setPosition(0.1);
+        encoderDrive(DRIVE_SPEED,  -5, -5,7.0);// back up
+        encoderDrive(DRIVE_SPEED,  -22, 22,7.0);// turn around
+        encoderDrive(DRIVE_SPEED,  65, 65,5.0); // go to the crater
+        }
+
     /*
      *  Method to perfmorm a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
