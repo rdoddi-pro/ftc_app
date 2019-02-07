@@ -65,6 +65,7 @@ public class DriverControlled extends OpMode
     private CRServo servo1;
     private CRServo crservo2;
     private DcMotor lin = null;
+    private Servo hook;
 
 
     /*
@@ -84,6 +85,8 @@ public class DriverControlled extends OpMode
         servo1 = hardwareMap.get(CRServo.class, "box_turner");
         turner  = hardwareMap.get(DcMotor.class, "arm_turner");
         lin = hardwareMap.get(DcMotor.class, "linear_actuator");
+        hook = hardwareMap.get(Servo.class, "hook");
+
 
 
 
@@ -130,25 +133,42 @@ public class DriverControlled extends OpMode
         // POV Mode uses left stick to go forward, and right stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
 
+
+        //gamepad1
         double drive = gamepad1.left_stick_y;//right wheel joystick
         double driver = gamepad1.right_stick_y;//left wheel joystick
-        double linear = gamepad2.right_stick_x; //joystick for lin
+        double linear = gamepad1.right_stick_x; //joystick for lin
 
-        double moto = gamepad2.left_stick_y;//for the dc motor to lift arms
-        double ser = gamepad2.right_stick_y; //joystick for continuous servo on arm to extend x-rail
-        double val = gamepad2.left_stick_x; // value for the rotation within the picker
-        double pow = gamepad2.left_trigger;
+        //gamepad2
+
+            //gamepad 2 right sticks
+                double ser = gamepad2.right_stick_x; //joystick for continuous servo on arm to extend x-rail
+                double moto = gamepad2.right_stick_y;//for the dc motor to lift arms
+
+            //gamepad2 left sticks
+                double val = gamepad2.left_stick_y; // value for the rotation within the picker the rubber band thingy
+                double pow = gamepad2.left_stick_x;//turner for box
 
 
-        // Send calculated power to wheels
+        //wheels
         leftDrive.setPower(driver); //left wheel
         rightDrive.setPower(drive);//right wheel
-        crservo1.setPower(ser);//crservo for arm extension
-        turner.setPower(moto/2);//dc motor with worm gear
+        //linear actuator
         lin.setPower(linear);//setting power for linear actuator
-        crservo2.setPower(val);
-        servo1.setPower(pow);
-        
+        //extender
+        crservo1.setPower(-ser);//crservo for arm extension
+        //dc motor for turning
+        turner.setPower(-moto/2);//dc motor with worm gear
+        //spinner for collecting balls
+        crservo2.setPower(val);// value for the rotation within the picker the rubber band thingy
+        //turning the box
+        servo1.setPower(pow);//turner for box
+        if(gamepad1.a){
+            hook.setPosition(0.5);
+        } else if(gamepad1.y){
+            hook.setPosition(0);
+        }
+
 
     }
 

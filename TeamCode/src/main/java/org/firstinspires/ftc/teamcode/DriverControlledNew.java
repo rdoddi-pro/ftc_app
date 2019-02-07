@@ -81,16 +81,11 @@ public class DriverControlledNew extends OpMode
 
 
 
-
-
-
-
-
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
-        arm.setPosition(1);
+        arm.setPosition(0);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -131,12 +126,14 @@ public class DriverControlledNew extends OpMode
         double linear = gamepad1.right_stick_x; //joystick for lin
 
         if(gamepad2.a) {
-            arm.setPosition(0);
-
-        } else if(gamepad2.b){
             arm.setPosition(0.5);
-        } else if(gamepad2.y) {
-            arm.setPosition(1);
+
+        }
+        if(gamepad2.b){
+            arm.setPosition(0.3);
+        }
+        if(gamepad2.y) {
+            arm.setPosition(0.1);
         }
         double rot = gamepad2.left_stick_y;
 
