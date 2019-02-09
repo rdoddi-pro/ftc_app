@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -63,6 +64,7 @@ public class AutoFacingDepot extends LinearOpMode {
     //Siddh Code
     public DcMotor leftDrive   = null;
     public DcMotor  rightDrive  = null;
+    public DcMotor linearactuator = null;
     //public DcMotor  leftDrive2  = null;
     //public DcMotor  rightDrive2 = null;
 
@@ -81,6 +83,7 @@ public class AutoFacingDepot extends LinearOpMode {
     //end of Siddh code
     Servo servo;
     Servo marker;
+    Servo hook;
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -116,6 +119,9 @@ public class AutoFacingDepot extends LinearOpMode {
 
         servo = hardwareMap.get(Servo.class, "servo_cam");
         marker = hardwareMap.get(Servo.class, "marker_servo");
+        hook = hardwareMap.get(Servo.class, "hook");
+        linearactuator = hardwareMap.get(DcMotor.class, "linear_actuator");
+
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
@@ -136,7 +142,7 @@ public class AutoFacingDepot extends LinearOpMode {
             if (tfod != null) {
                 tfod.activate();
                 routesInit();
-                encoderDrive(DRIVE_SPEED, 8, 8, 3.0);
+                encoderDrive(DRIVE_SPEED, 6, 6, 3.0);
                 sleep(2000);
                 rightDrive.setPower(0);
                 leftDrive.setPower(0);
@@ -168,9 +174,9 @@ public class AutoFacingDepot extends LinearOpMode {
                         if (foundGold) {
                             middle();
                         } else {
-                            servo.setPosition(0.6);
+                            servo.setPosition(0.7);
                             // point the camera to "right"
-                            sleep(4000);
+                            sleep(2000);
                             updatedRecognitions = tfod.getUpdatedRecognitions();
                             if (updatedRecognitions != null) {
                                 for (Recognition recognition : updatedRecognitions) {
@@ -302,14 +308,14 @@ public class AutoFacingDepot extends LinearOpMode {
     }
 
     public void facingDepot_middle() {
-        encoderDrive(DRIVE_SPEED,  29,29,10.0);  // go forward and hit gold mineral while dragging it into the depot and dropping the team marker
+        encoderDrive(DRIVE_SPEED,  32,32,10.0);  // go forward and hit gold mineral while dragging it into the depot and dropping the team marker
         marker.setPosition(0.7);
         sleep(CYCLE_MS);
         marker.setPosition(0.1);
         encoderDrive(DRIVE_SPEED, -6, -6, 3.0);
-        encoderDrive(TURN_SPEED, 11, -11, 4.0);  // back up turning right
-        encoderDrive(DRIVE_SPEED,   6, 6, 4.0);  // go forward
-        encoderDrive(TURN_SPEED, 3.75, -3.75, 3.0);  //turn right
+        encoderDrive(TURN_SPEED, 14, -14, 4.0);  // back up turning right
+        encoderDrive(DRIVE_SPEED,   5, 5, 4.0);  // go forward
+        encoderDrive(TURN_SPEED, 3.5, -3.5, 3.0);  //turn right
         //encoderDrive(DRIVE_SPEED, 6, 6, 4.0);
         //encoderDrive(TURN_SPEED, 1, -1, 2.0);
         encoderDrive(DRIVE_SPEED*2,   54, 54, 5.0);//go forward
@@ -327,7 +333,7 @@ public class AutoFacingDepot extends LinearOpMode {
         marker.setPosition(0.7);
         sleep(CYCLE_MS);
         marker.setPosition(0.1);
-        encoderDrive(TURN_SPEED, 5, -5, 3.0);//turn right
+        encoderDrive(TURN_SPEED, 9, -9, 3.0);//turn right
         encoderDrive(DRIVE_SPEED, 9, 9, 3.0); // go forward
         encoderDrive(TURN_SPEED, 6, -6, 3.0); // turn right
         encoderDrive(DRIVE_SPEED, 170, 170, 5.0); //go to crater
@@ -338,13 +344,13 @@ public class AutoFacingDepot extends LinearOpMode {
 
         encoderDrive(TURN_SPEED, 5, -5, 3.0); // turn right
         encoderDrive(DRIVE_SPEED, 15, 15, 4.0); // go forward
-        encoderDrive(TURN_SPEED, -7, 7, 3.0);// turn left
+        encoderDrive(TURN_SPEED, -5, 5, 3.0);// turn left
         encoderDrive(DRIVE_SPEED, 16, 16, 3.0); // go forward
         marker.setPosition(0.7);
         sleep(CYCLE_MS);
         marker.setPosition(0.1);
         encoderDrive(TURN_SPEED, -3, 3, 2.0); // turn left
-        encoderDrive(DRIVE_SPEED*2, -180, -180, 5.0); //go to crater
+        encoderDrive(DRIVE_SPEED/3, -100, -100, 5.0); //go to crater
         }
 
     /*

@@ -32,8 +32,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.sun.tools.javac.util.JCDiagnostic;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -63,6 +65,9 @@ public class AutoFacingCrater extends LinearOpMode {
     //Siddh Code
     public DcMotor leftDrive   = null;
     public DcMotor  rightDrive  = null;
+    private DcMotor linearactuator = null;
+    Servo hook;
+
     //public DcMotor  leftDrive2  = null;
     //public DcMotor  rightDrive2 = null;
 
@@ -81,6 +86,7 @@ public class AutoFacingCrater extends LinearOpMode {
     //end of Siddh code
     Servo servo;
     Servo marker;
+
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -116,6 +122,8 @@ public class AutoFacingCrater extends LinearOpMode {
 
         servo = hardwareMap.get(Servo.class, "servo_cam");
         marker = hardwareMap.get(Servo.class, "marker_servo");
+        hook = hardwareMap.get(Servo.class, "hook");
+        linearactuator = hardwareMap.get(DcMotor.class, "linear_actuator");
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
@@ -136,7 +144,31 @@ public class AutoFacingCrater extends LinearOpMode {
             if (tfod != null) {
                 tfod.activate();
                 routesInit();
-                encoderDrive(DRIVE_SPEED, 8, 8, 3.0);
+                linearactuator.setDirection(DcMotorSimple.Direction.FORWARD);
+
+
+                // Most robots need the motor on one side to be reversed to drive forward
+                // Reverse the motor that runs backwards when connected directly to the battery
+                //leftDrive.setDirection(DcMotor.Direction.FORWARD);
+                //leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                //leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                // run until the end of the match (driver presses STOP)
+                //while (opModeIsActive()) {
+                //int current_position;
+                //current_position = leftDrive.getCurrentPosition();
+                //telemetry.addData("encoder_current_position:", current_position);
+
+                //leftDrive.setTargetPosition(current_position);
+                //leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                telemetry.addData("encoder_new_current_position:", leftDrive.getCurrentPosition());
+
+
+
+
+
+                encoderDrive(DRIVE_SPEED, 5, 5, 3.0);
                 sleep(2000);
                 rightDrive.setPower(0);
                 leftDrive.setPower(0);
@@ -169,7 +201,7 @@ public class AutoFacingCrater extends LinearOpMode {
                             middle();
                         } else {
                             // point the camera to "right"
-                            servo.setPosition(0.6);
+                            servo.setPosition(0.8);
                             sleep(8000);
                             updatedRecognitions = tfod.getUpdatedRecognitions();
                             if (updatedRecognitions != null) {
@@ -302,13 +334,13 @@ public class AutoFacingCrater extends LinearOpMode {
     }
 
     public void facingCrater_middle() {
-        encoderDrive(DRIVE_SPEED,  22,22,6.0);  // go forward and touch gold mineral
+        encoderDrive(DRIVE_SPEED,  14,14,6.0);  // go forward and touch gold mineral
         encoderDrive(DRIVE_SPEED, -13, -13, 4.0);//go backward
         encoderDrive(TURN_SPEED, -6, 6, 5.0);//turn left
         encoderDrive(DRIVE_SPEED, 28,28, 7.0);//go forward
         encoderDrive(TURN_SPEED, -6, 6, 5.0 );//turn left
         encoderDrive(DRIVE_SPEED, 15, 15, 5.0);//go forward
-        encoderDrive(TURN_SPEED, -1.25, 1.25, 3.0);//turn left a little
+        encoderDrive(TURN_SPEED, -0.5, 0.5, 3.0);//turn left a little
         encoderDrive(DRIVE_SPEED, 23, 23, 6.0);//go forward to the depot and drop team marker
         marker.setPosition(0.7);
         sleep(CYCLE_MS);
@@ -320,7 +352,7 @@ public class AutoFacingCrater extends LinearOpMode {
     }
     private void facingCrater_left() {
 
-        encoderDrive(DRIVE_SPEED,  22,22,6.0);  // go forward and touch gold mineral
+        encoderDrive(DRIVE_SPEED,  14,14,6.0);  // go forward and touch gold mineral
         encoderDrive(DRIVE_SPEED, -13, -13, 4.0);//go backward
         encoderDrive(TURN_SPEED, -6, 6, 5.0);//turn left
         encoderDrive(DRIVE_SPEED, 28,28, 7.0);//go forward
@@ -336,22 +368,26 @@ public class AutoFacingCrater extends LinearOpMode {
 
     }
     private void facingCrater_right(){
-
-        encoderDrive(DRIVE_SPEED,  5, 5,2.0);  // Go forward
+        //encoderDrive(DRIVE_SPEED,  5, 5,2.0);  // Go forward
         encoderDrive(DRIVE_SPEED,  5, -3,5.0);  // turn right
         encoderDrive(DRIVE_SPEED,  11, 11,5.0); // Go forward and hit the gold mineral on the right
         encoderDrive(DRIVE_SPEED,  -10, -10,7.0);// back up
         encoderDrive(DRIVE_SPEED,  -11, 11,7.0); //take hook turn to the left
-        encoderDrive(DRIVE_SPEED,  30, 30,8.0); // go forward
+        encoderDrive(DRIVE_SPEED,  36, 36,8.0); // go forward
         encoderDrive(DRIVE_SPEED,  -3.5,4.5,7.0); // turn left
         encoderDrive(TURN_SPEED,   -1.10, 1.10,5.0);//small adjustment to the left
-        encoderDrive(DRIVE_SPEED,  38, 38,7.0); // go forward to the depot and drop team marker
+        encoderDrive(DRIVE_SPEED,  36, 36,7.0); // go forward to the depot and drop team marker
         marker.setPosition(0.7);
         sleep(CYCLE_MS);
         marker.setPosition(0.1);
         encoderDrive(DRIVE_SPEED,  -5, -5,7.0);// back up
-        encoderDrive(DRIVE_SPEED,  -22, 22,7.0);// turn around
-        encoderDrive(DRIVE_SPEED,  65, 65,5.0); // go to the crater
+        encoderDrive(DRIVE_SPEED,  -20, 20,7.0);// turn around
+        encoderDrive(DRIVE_SPEED,    69, 69,4.0); // go to the crater
+
+
+
+
+
 
     }
 

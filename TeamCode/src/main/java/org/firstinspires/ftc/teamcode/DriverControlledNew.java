@@ -61,6 +61,7 @@ public class DriverControlledNew extends OpMode
     Servo arm;
     private CRServo rotator;
     private DcMotor actuator = null;
+    Servo servo2;
 
 
     /*
@@ -78,6 +79,7 @@ public class DriverControlledNew extends OpMode
         rotator = hardwareMap.get(CRServo.class, "rotator");
         arm = hardwareMap.get(Servo.class, "box_turner");
         actuator = hardwareMap.get(DcMotor.class, "linear_actuator");
+        servo2 = hardwareMap.get(Servo.class, "hook");
 
 
 
@@ -126,14 +128,20 @@ public class DriverControlledNew extends OpMode
         double linear = gamepad1.right_stick_x; //joystick for lin
 
         if(gamepad2.a) {
-            arm.setPosition(0.5);
+            arm.setPosition(0);
 
         }
         if(gamepad2.b){
-            arm.setPosition(0.3);
+            arm.setPosition(0.5);
         }
         if(gamepad2.y) {
-            arm.setPosition(0.1);
+            arm.setPosition(0.75);
+        }
+        if (gamepad1.a){
+            servo2.setPosition(1);
+        }
+        if (gamepad1.b){
+            servo2.setPosition(0.5);
         }
         double rot = gamepad2.left_stick_y;
 
