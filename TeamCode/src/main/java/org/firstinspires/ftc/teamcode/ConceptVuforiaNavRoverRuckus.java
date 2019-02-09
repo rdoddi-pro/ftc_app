@@ -96,6 +96,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  */
 
 @Autonomous(name="Concept: Vuforia Rover Nav-Webcam", group ="Concept")
+@Disabled
 public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
 
     /*

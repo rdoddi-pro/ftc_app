@@ -67,6 +67,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Route2-FacingCrater", group="Pushbot")
+@Disabled
 public class PushbotAutoEncoder_FacingCraterRt2Working extends LinearOpMode {
     private DcMotor  leftDrive   = null;
     private DcMotor  rightDrive  = null;

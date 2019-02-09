@@ -141,93 +141,9 @@ public class AutoFacingCrater extends LinearOpMode {
 
         if (opModeIsActive()) {
             /** Activate Tensor Flow Object Detection. */
-            if (tfod != null) {
-                tfod.activate();
-                routesInit();
-                linearactuator.setDirection(DcMotorSimple.Direction.FORWARD);
-
-
-                // Most robots need the motor on one side to be reversed to drive forward
-                // Reverse the motor that runs backwards when connected directly to the battery
-                //leftDrive.setDirection(DcMotor.Direction.FORWARD);
-                //leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                //leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-                // run until the end of the match (driver presses STOP)
-                //while (opModeIsActive()) {
-                //int current_position;
-                //current_position = leftDrive.getCurrentPosition();
-                //telemetry.addData("encoder_current_position:", current_position);
-
-                //leftDrive.setTargetPosition(current_position);
-                //leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                telemetry.addData("encoder_new_current_position:", leftDrive.getCurrentPosition());
-
-
-
-
-
-                encoderDrive(DRIVE_SPEED, 5, 5, 3.0);
-                sleep(2000);
-                rightDrive.setPower(0);
-                leftDrive.setPower(0);
-                leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
-
-            while (opModeIsActive()) {
-
-                // Exit when x becomes greater than 4
-
-                if (tfod != null) {
-                    // getUpdatedRecognitions() will return null if no new information is available since
-                    // the last time that call was made.
-                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                    if (updatedRecognitions != null) {
-                        telemetry.addData("# Object Detected", updatedRecognitions.size());
-                        // We are starting pointing towards "middle"
-                        boolean foundGold = false;
-                        for (Recognition recognition : updatedRecognitions) {
-                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                //autoroutes.init();
-                                //autoroutes.routesInit();
-                                //autoroutes.facingDepot_middle();
-                                foundGold = true;
-                                break;
-                            }
-                        }
-                        if (foundGold) {
-                            middle();
-                        } else {
-                            // point the camera to "right"
-                            servo.setPosition(0.8);
-                            sleep(8000);
-                            updatedRecognitions = tfod.getUpdatedRecognitions();
-                            if (updatedRecognitions != null) {
-                                for (Recognition recognition : updatedRecognitions) {
-                                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                        foundGold = true;
-                                        break;
-                                    }
-                                }
-                                if (foundGold) {
-                                    facingCrater_right();
-                                } else {
-                                    facingCrater_left();
-                                }
-                            }
-                        }
-                        telemetry.update();
-                    }
-
-                    if (tfod != null) {
-                        tfod.shutdown();
-                    }
-                }
-            }
-        }
+            middle();
     }
+}
 
     /**
      * Initialize the Vuforia localization engine.
@@ -334,7 +250,7 @@ public class AutoFacingCrater extends LinearOpMode {
     }
 
     public void facingCrater_middle() {
-        encoderDrive(DRIVE_SPEED,  14,14,6.0);  // go forward and touch gold mineral
+        encoderDrive(DRIVE_SPEED,  22,22,6.0);  // go forward and touch gold mineral
         encoderDrive(DRIVE_SPEED, -13, -13, 4.0);//go backward
         encoderDrive(TURN_SPEED, -6, 6, 5.0);//turn left
         encoderDrive(DRIVE_SPEED, 28,28, 7.0);//go forward

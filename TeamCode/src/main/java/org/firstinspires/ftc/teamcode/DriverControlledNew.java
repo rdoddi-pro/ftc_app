@@ -58,10 +58,10 @@ public class DriverControlledNew extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
-    Servo arm;
+    private CRServo arm;
     private CRServo rotator;
     private DcMotor actuator = null;
-    Servo servo2;
+    Servo hook;
 
 
     /*
@@ -77,9 +77,9 @@ public class DriverControlledNew extends OpMode
         leftDrive  = hardwareMap.get(DcMotor.class, "front_left");
         rightDrive = hardwareMap.get(DcMotor.class, "front_right");
         rotator = hardwareMap.get(CRServo.class, "rotator");
-        arm = hardwareMap.get(Servo.class, "box_turner");
+        arm = hardwareMap.get(CRServo.class, "box_turner");
         actuator = hardwareMap.get(DcMotor.class, "linear_actuator");
-        servo2 = hardwareMap.get(Servo.class, "hook");
+        hook = hardwareMap.get(Servo.class, "hook");
 
 
 
@@ -87,7 +87,7 @@ public class DriverControlledNew extends OpMode
         // Reverse the motor that runs backwards when connected directly to the battery
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
-        arm.setPosition(0);
+        //arm.setPosition(0);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -114,8 +114,7 @@ public class DriverControlledNew extends OpMode
     @Override
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
-        double leftPower;
-        double rightPower;
+
 
         // Choose to drive using either Tank Mode, or POV Mode
         // Comment out the method that's not used.  The default below is POV.
@@ -127,23 +126,24 @@ public class DriverControlledNew extends OpMode
         double driver = gamepad1.right_stick_y;//left wheel joystick
         double linear = gamepad1.right_stick_x; //joystick for lin
 
-        if(gamepad2.a) {
-            arm.setPosition(0);
+        //if(gamepad2.a) {
+            //arm.setPosition(0);
 
-        }
-        if(gamepad2.b){
-            arm.setPosition(0.5);
-        }
-        if(gamepad2.y) {
-            arm.setPosition(0.75);
-        }
+        //}
+        //if(gamepad2.b){
+            //arm.setPosition(0.5);
+        //}
+        //if(gamepad2.y) {
+            //arm.setPosition(0.75);
+        //}
         if (gamepad1.a){
-            servo2.setPosition(1);
+            hook.setPosition(1);
         }
         if (gamepad1.b){
-            servo2.setPosition(0.5);
+            hook.setPosition(0.5);
         }
         double rot = gamepad2.left_stick_y;
+        double ar1 = gamepad2.right_stick_y;
 
 
 
@@ -152,10 +152,11 @@ public class DriverControlledNew extends OpMode
 
 
         // Send calculated power to wheels
-        leftDrive.setPower(driver); //left wheel
-        rightDrive.setPower(drive);//right wheel
+        leftDrive.setPower(driver/2); //left wheel
+        rightDrive.setPower(drive/2);//right wheel
         actuator.setPower(linear);//setting power for linear actuator
-        rotator.setPower(rot);
+        rotator.setPower(rot*1.5);
+        arm.setPower(ar1*1.5);
 
 
 

@@ -133,7 +133,7 @@ public class AutoFacingDepot extends LinearOpMode {
 
         //autoroutes.init();
         //autoroutes.routesInit();
-        servo.setPosition(0.5);
+        servo.setPosition(0.47);
 
         waitForStart();
 
@@ -174,7 +174,7 @@ public class AutoFacingDepot extends LinearOpMode {
                         if (foundGold) {
                             middle();
                         } else {
-                            servo.setPosition(0.7);
+                            servo.setPosition(0.72);
                             // point the camera to "right"
                             sleep(2000);
                             updatedRecognitions = tfod.getUpdatedRecognitions();
@@ -350,7 +350,7 @@ public class AutoFacingDepot extends LinearOpMode {
         sleep(CYCLE_MS);
         marker.setPosition(0.1);
         encoderDrive(TURN_SPEED, -3, 3, 2.0); // turn left
-        encoderDrive(DRIVE_SPEED/3, -100, -100, 5.0); //go to crater
+        encoderDrive(DRIVE_SPEED/2, -120, -120, 5.0); //go to crater
         }
 
     /*

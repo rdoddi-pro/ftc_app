@@ -66,6 +66,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Route1-FacingDepot", group="Pushbot")
+@Disabled
 public class PushbotAutoEncoder_FacingDepotRt1Working extends LinearOpMode {
     private DcMotor  leftDrive   = null;
     private DcMotor  rightDrive  = null;
